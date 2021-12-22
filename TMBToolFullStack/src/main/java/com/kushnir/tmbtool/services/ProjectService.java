@@ -1,9 +1,12 @@
 package com.kushnir.tmbtool.services;
 
 import com.kushnir.tmbtool.domain.Project;
+import com.kushnir.tmbtool.exceptions.ProjectIdException;
 import com.kushnir.tmbtool.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Locale;
 
 @Service
 public class ProjectService {
@@ -13,8 +16,12 @@ public class ProjectService {
 
     public Project saveOrUpdateProject(Project project) {
 
-        //Logic
+        try {
+            project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
+            return projectRepository.save(project);
+        } catch (Exception e) {
+            throw new ProjectIdException("Project ID '" + project.getProjectIdentifier().toUpperCase() + "' already exists.");
+        }
 
-        return projectRepository.save(project);
     }
 }
