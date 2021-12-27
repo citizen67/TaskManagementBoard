@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/api/project")
@@ -49,5 +50,18 @@ public class ProjectController {
         projectService.deleteProjectByIdentifier(projectId.toUpperCase());
 
         return new ResponseEntity<String>("Project with ID: '" + projectId + "' was deleted", HttpStatus.OK);
+    }
+
+    @PutMapping("{projectId}")
+    public ResponseEntity<?> updateProject(@Valid @RequestBody Project project, @PathVariable String projectId) {
+        Project project1 = projectService.findProjectByIdentifier(projectId.toUpperCase());
+
+        project1.setProjectName(project.getProjectName());
+        project1.setProjectIdentifier(project.getProjectIdentifier());
+        project1.setDescription(project.getDescription());
+
+        final Project updatedProject = projectService.saveOrUpdateProject(project1);
+
+        return new ResponseEntity<Project>(updatedProject, HttpStatus.OK);
     }
 }
