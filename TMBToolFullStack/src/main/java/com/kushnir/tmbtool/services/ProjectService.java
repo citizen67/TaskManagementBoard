@@ -6,8 +6,6 @@ import com.kushnir.tmbtool.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Locale;
-
 @Service
 public class ProjectService {
 
@@ -28,10 +26,14 @@ public class ProjectService {
 
         Project project = projectRepository.findByProjectIdentifier(projectId.toUpperCase());
 
-        if(project == null) {
+        if (project == null) {
             throw new ProjectIdException("Project ID '" + projectId + "' does not exists");
         }
 
         return project;
+    }
+
+    public Iterable<Project> findAllProjects() {
+        return projectRepository.findAll();
     }
 }
