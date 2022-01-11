@@ -1,7 +1,9 @@
 package com.kushnir.tmbtool.services;
 
+import com.kushnir.tmbtool.domain.Backlog;
 import com.kushnir.tmbtool.domain.Project;
 import com.kushnir.tmbtool.exceptions.ProjectIdException;
+import com.kushnir.tmbtool.repositories.BacklogRepository;
 import com.kushnir.tmbtool.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,10 +14,25 @@ public class ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
 
+    @Autowired
+    private BacklogRepository backlogRepository;
+
     public Project saveOrUpdateProject(Project project) {
 
         try {
             project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
+
+            if (project.getId() == null) {
+                Backlog backlog = new Backlog();
+                project.setBacklog(backlog);
+                backlog.setProject(project);
+                backlog.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
+            }
+
+            if (project.getId() != null) {
+                project.setBacklog(backlogRepository.findByProjectIdentifier(project.getProjectIdentifier().toUpperCase()));
+            }
+
             return projectRepository.save(project);
         } catch (Exception e) {
             throw new ProjectIdException("Project ID '" + project.getProjectIdentifier().toUpperCase() + "' already exists.");
