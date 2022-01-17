@@ -8,9 +8,9 @@ import classNames from 'classnames';
 class AddProjectTask extends Component {
 
     constructor(props) {
-        super(props)
+        super(props);
 
-        const { id } = this.props.match.params
+        const { id } = this.props.match.params;
 
         this.state = {
             summary: "",
@@ -19,7 +19,7 @@ class AddProjectTask extends Component {
             prority: 0,
             dueDate: "",
             projectIdentifier: id,
-            errors: ""
+            errors: {}
         };
 
         this.onChange = this.onChange.bind(this);
@@ -45,7 +45,7 @@ class AddProjectTask extends Component {
             summary: this.state.summary,
             acceptanceCriteria: this.state.acceptanceCriteria,
             status: this.state.status,
-            prority: this.state.prority,
+            priority: this.state.prority,
             dueDate: this.state.dueDate
         };
 
@@ -111,7 +111,7 @@ class AddProjectTask extends Component {
                                     <select
                                         className="form-control form-control-lg"
                                         name="priority"
-                                        value={this.state.prority}
+                                        value={this.state.priority}
                                         onChange={this.onChange}
                                     >
                                         <option value={0}>Select Priority</option>
@@ -155,6 +155,6 @@ AddProjectTask.propTypes = {
 
 const mapStateToProps = state => ({
     errors: state.errors
-})
+});
 
 export default connect(mapStateToProps, { addProjectTask })(AddProjectTask);

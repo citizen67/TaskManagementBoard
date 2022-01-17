@@ -28,7 +28,7 @@ class ProjectBoard extends Component {
     }
 }
 
-ProjectBoard.PropTypes = {
+ProjectBoard.propTypes = {
     backlog: PropTypes.object.isRequired,
     getBacklog: PropTypes.func.isRequired
 };
