@@ -45,7 +45,7 @@ class AddProjectTask extends Component {
             summary: this.state.summary,
             acceptanceCriteria: this.state.acceptanceCriteria,
             status: this.state.status,
-            priority: this.state.prority,
+            priority: this.state.priority,
             dueDate: this.state.dueDate
         };
 
