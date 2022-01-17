@@ -42,8 +42,8 @@ export const getProjectTask = (backlog_id, pt_id, history) => async dispatch => 
         const res = await axios.get(`/api/backlog/${backlog_id}/${pt_id}`);
         dispatch({
             type: GET_PROJECT_TASK,
-            payload: res.date
-        })
+            payload: res.data
+        });
     } catch (err) {
         history.push("/dashboard");
     }
