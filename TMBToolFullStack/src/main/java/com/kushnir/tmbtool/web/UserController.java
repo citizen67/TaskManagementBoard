@@ -1,2 +1,4 @@
-package com.kushnir.tmbtool.web;public class UserController {
+package com.kushnir.tmbtool.web;
+
+public class UserController {
 }

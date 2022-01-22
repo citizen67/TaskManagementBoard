@@ -1,2 +1,4 @@
-package com.kushnir.tmbtool.domain;public class User {
+package com.kushnir.tmbtool.domain;
+
+public class User {
 }
