@@ -3,6 +3,7 @@ package com.kushnir.tmbtool.web;
 import com.kushnir.tmbtool.domain.User;
 import com.kushnir.tmbtool.services.MapValidationErrorService;
 import com.kushnir.tmbtool.services.UserService;
+import com.kushnir.tmbtool.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +25,17 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserValidator userValidator;
+
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody User user, BindingResult result) {
         //Validate passwords match
+        userValidator.validate(user, result);
 
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
 
-        if(errorMap != null) {
+        if (errorMap != null) {
             return errorMap;
         }
 

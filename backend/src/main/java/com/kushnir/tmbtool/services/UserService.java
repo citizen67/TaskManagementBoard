@@ -24,6 +24,8 @@ public class UserService {
             //Username need to be unique
             newUser.setUsername(newUser.getUsername());
 
+            //Not send confirmPassword to json
+            newUser.setConfirmPassword("");
             return userRepository.save(newUser);
         } catch (Exception e) {
             throw new UsernameAlreadyExistsException("Username '" + newUser.getUsername() + "' already exists.");
