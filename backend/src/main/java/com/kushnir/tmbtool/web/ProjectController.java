@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/project")
@@ -23,12 +24,12 @@ public class ProjectController {
     private MapValidationErrorService mapValidationErrorService;
 
     @PostMapping("")
-    public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult bindingResult) {
+    public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult bindingResult, Principal principal) {
 
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(bindingResult);
         if (errorMap != null) return errorMap;
 
-        Project project1 = projectService.saveOrUpdateProject(project);
+        Project project1 = projectService.saveOrUpdateProject(project, principal.getName());
         return new ResponseEntity<Project>(project, HttpStatus.CREATED);
     }
 
@@ -53,14 +54,14 @@ public class ProjectController {
     }
 
     @PutMapping("{projectId}")
-    public ResponseEntity<?> updateProject(@Valid @RequestBody Project project, @PathVariable String projectId) {
+    public ResponseEntity<?> updateProject(@Valid @RequestBody Project project, @PathVariable String projectId, Principal principal) {
         Project project1 = projectService.findProjectByIdentifier(projectId.toUpperCase());
 
         project1.setProjectName(project.getProjectName());
         project1.setProjectIdentifier(project.getProjectIdentifier());
         project1.setDescription(project.getDescription());
 
-        final Project updatedProject = projectService.saveOrUpdateProject(project1);
+        final Project updatedProject = projectService.saveOrUpdateProject(project1, principal.getName());
 
         return new ResponseEntity<Project>(updatedProject, HttpStatus.OK);
     }
