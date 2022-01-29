@@ -1,4 +1,4 @@
-package com.kushnir.tmbtool.web;
+package com.kushnir.tmbtool.controllers;
 
 import com.kushnir.tmbtool.domain.Project;
 import com.kushnir.tmbtool.services.MapValidationErrorService;
@@ -34,28 +34,28 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectId}")
-    public ResponseEntity<?> getProjectById(@PathVariable String projectId) {
+    public ResponseEntity<?> getProjectById(@PathVariable String projectId, Principal principal) {
 
-        Project project = projectService.findProjectByIdentifier(projectId);
+        Project project = projectService.findProjectByIdentifier(projectId, principal.getName());
 
         return new ResponseEntity<Project>(project, HttpStatus.OK);
     }
 
     @GetMapping("/all")
-    public Iterable<Project> getAllProjects() {
-        return projectService.findAllProjects();
+    public Iterable<Project> getAllProjects(Principal principal) {
+        return projectService.findAllProjects(principal.getName());
     }
 
     @DeleteMapping("/{projectId}")
-    public ResponseEntity<?> deleteProject(@PathVariable String projectId) {
-        projectService.deleteProjectByIdentifier(projectId.toUpperCase());
+    public ResponseEntity<?> deleteProject(@PathVariable String projectId, Principal principal) {
+        projectService.deleteProjectByIdentifier(projectId.toUpperCase(), principal.getName());
 
         return new ResponseEntity<String>("Project with ID: '" + projectId + "' was deleted", HttpStatus.OK);
     }
 
     @PutMapping("{projectId}")
     public ResponseEntity<?> updateProject(@Valid @RequestBody Project project, @PathVariable String projectId, Principal principal) {
-        Project project1 = projectService.findProjectByIdentifier(projectId.toUpperCase());
+        Project project1 = projectService.findProjectByIdentifier(projectId.toUpperCase(), principal.getName());
 
         project1.setProjectName(project.getProjectName());
         project1.setProjectIdentifier(project.getProjectIdentifier());

@@ -1,4 +1,4 @@
-package com.kushnir.tmbtool.web;
+package com.kushnir.tmbtool.controllers;
 
 import com.kushnir.tmbtool.domain.User;
 import com.kushnir.tmbtool.payload.JWTLoginSuccessResponse;

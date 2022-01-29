@@ -4,6 +4,7 @@ import com.kushnir.tmbtool.domain.Backlog;
 import com.kushnir.tmbtool.domain.Project;
 import com.kushnir.tmbtool.domain.User;
 import com.kushnir.tmbtool.exceptions.ProjectIdException;
+import com.kushnir.tmbtool.exceptions.ProjectNotFoundException;
 import com.kushnir.tmbtool.repositories.BacklogRepository;
 import com.kushnir.tmbtool.repositories.ProjectRepository;
 import com.kushnir.tmbtool.repositories.UserRepository;
@@ -44,32 +45,32 @@ public class ProjectService {
 
             return projectRepository.save(project);
         } catch (Exception e) {
-            throw new ProjectIdException("Project ID '" + project.getProjectIdentifier().toUpperCase() + "' already exists.");
+            throw new ProjectIdException("Project with ID '" + project.getProjectIdentifier().toUpperCase() + "' already exists.");
         }
     }
 
-    public Project findProjectByIdentifier(String projectId) {
+    public Project findProjectByIdentifier(String projectId, String username) {
 
         Project project = projectRepository.findByProjectIdentifier(projectId.toUpperCase());
 
         if (project == null) {
-            throw new ProjectIdException("Project ID '" + projectId + "' does not exists");
+            throw new ProjectIdException("Project with ID '" + projectId + "' does not exists");
+        }
+
+        //Check for the user who is looking for the project is the project owner
+        if (!project.getProjectOwner().equals(username)) {
+            throw new ProjectNotFoundException("Project not found in your account.");
         }
 
         return project;
     }
 
-    public Iterable<Project> findAllProjects() {
-        return projectRepository.findAll();
+    public Iterable<Project> findAllProjects(String username) {
+        return projectRepository.findAllByProjectOwner(username);
     }
 
-    public void deleteProjectByIdentifier(String projectId) {
-        Project project = projectRepository.findByProjectIdentifier(projectId);
+    public void deleteProjectByIdentifier(String projectId, String username) {
 
-        if (project == null) {
-            throw new ProjectIdException("Cannot delete Project with ID '" + projectId + "'. This project does not exists.");
-        }
-
-        projectRepository.delete(project);
+        projectRepository.delete(findProjectByIdentifier(projectId, username));
     }
 }
