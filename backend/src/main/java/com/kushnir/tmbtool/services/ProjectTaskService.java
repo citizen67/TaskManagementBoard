@@ -1,7 +1,6 @@
 package com.kushnir.tmbtool.services;
 
 import com.kushnir.tmbtool.domain.Backlog;
-import com.kushnir.tmbtool.domain.Project;
 import com.kushnir.tmbtool.domain.ProjectTask;
 import com.kushnir.tmbtool.exceptions.ProjectNotFoundException;
 import com.kushnir.tmbtool.repositories.BacklogRepository;
@@ -22,47 +21,42 @@ public class ProjectTaskService {
     @Autowired
     private ProjectRepository projectRepository;
 
-    public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask) {
+    @Autowired
+    private ProjectService projectService;
 
-        try {
-            //PTs to be added to a specific project, project != null, BL exists
-            Backlog backlog = backlogRepository.findByProjectIdentifier(projectIdentifier);
-            //Set the Backlog to the PT
-            projectTask.setBacklog(backlog);
+    public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask, String username) {
 
-            Integer backlogSequence = backlog.getPTSequence();
-            //Update the Backlog SEQUENCE
-            backlogSequence++;
+        //PTs to be added to a specific project, project != null, BL exists
+        Backlog backlog = projectService.findProjectByIdentifier(projectIdentifier, username).getBacklog();
+        //Set the Backlog to the PT
+        projectTask.setBacklog(backlog);
 
-            backlog.setPTSequence(backlogSequence);
+        Integer backlogSequence = backlog.getPTSequence();
+        //Update the Backlog SEQUENCE
+        backlogSequence++;
 
-            //Add Sequence to the Project Task
-            projectTask.setProjectSequence(projectIdentifier + "-" + backlogSequence);
-            projectTask.setProjectIdentifier(projectIdentifier);
+        backlog.setPTSequence(backlogSequence);
 
-            //INITIAL priority when priority null
-            if (projectTask.getPriority() == 0 || projectTask.getPriority() == null) {
-                projectTask.setPriority(3);
-            }
+        //Add Sequence to the Project Task
+        projectTask.setProjectSequence(projectIdentifier + "-" + backlogSequence);
+        projectTask.setProjectIdentifier(projectIdentifier);
 
-            //INITIAL status when status in null
-            if (projectTask.getStatus() == "" || projectTask.getStatus() == null) {
-                projectTask.setStatus("TO_DO");
-            }
-
-            return projectTaskRepository.save(projectTask);
-        } catch (Exception e) {
-            throw new ProjectNotFoundException("Project not found.");
+        //INITIAL priority when priority null
+        if (projectTask.getPriority() == 0 || projectTask.getPriority() == null) {
+            projectTask.setPriority(3);
         }
+
+        //INITIAL status when status in null
+        if (projectTask.getStatus() == "" || projectTask.getStatus() == null) {
+            projectTask.setStatus("TO_DO");
+        }
+
+        return projectTaskRepository.save(projectTask);
     }
 
-    public Iterable<ProjectTask> findBacklogById(String id) {
+    public Iterable<ProjectTask> findBacklogById(String id, String username) {
 
-        Project project = projectRepository.findByProjectIdentifier(id);
-
-        if (project == null) {
-            throw new ProjectNotFoundException("Project with ID: '" + id + "' does not exist.");
-        }
+        projectService.findProjectByIdentifier(id, username);
 
         return projectTaskRepository.findByProjectIdentifierOrderByPriority(id);
     }
