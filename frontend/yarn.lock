@@ -4690,6 +4690,11 @@
   dependencies:
     "array-includes" "^3.0.3"
 
+"jwt-decode@^2.2.0":
+  "integrity" "sha1-fYa9VmefWM5qhHBKZX3TkruoGnk="
+  "resolved" "https://registry.npmjs.org/jwt-decode/-/jwt-decode-2.2.0.tgz"
+  "version" "2.2.0"
+
 "killable@^1.0.0":
   "integrity" "sha512-LzqtLKlUwirEUyl/nicirVmNiPvYs7l5n8wOPP7fyJVpUPkvCnW/vuiXGpylGUlnPDnB7311rARzAt3Mhswpjg=="
   "resolved" "https://registry.npmjs.org/killable/-/killable-1.0.1.tgz"
