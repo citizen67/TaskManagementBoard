@@ -33,6 +33,12 @@ class Login extends Component {
         this.props.login(LoginRequest);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.security.validToken) {
+            this.props.history.push("/dashboard");
+        }
+    }
+
     render() {
         return (
             <div className="login">
