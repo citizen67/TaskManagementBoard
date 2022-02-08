@@ -19,6 +19,13 @@ class Login extends Component {
         this.onSubmit = this.onSubmit.bind(this);
     }
 
+    //disable login form then authorized
+    componentDidMount() {
+        if (this.props.security.validToken) {
+            this.props.history.push("/dashboard");
+        }
+    }
+
     onChange(e) {
         this.setState({ [e.target.name]: e.target.value });
     }
